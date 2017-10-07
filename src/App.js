@@ -8,10 +8,42 @@ import SearchBooks from './SearchBooks'
 import * as BooksApi from './BooksAPI'
 
 
+
+/*
+App:
+
++------------------------------------+
+|  BookCase: 1                       |
+|  +------------------------------+  |
+|  |  BookShelf: 0..*             |  |
+|  |  +------------------------+  |  |
+|  |  |  Book: 0..*            |  |  |
+|  |  |  +------------------+  |  |  |
+|  |  |  | ShelfChanger: 1  |  |  |  |
+|  |  |  +------------------+  |  |  |
+|  |  +------------------------+  |  |
+|  +------------------------------+  |
++------------------------------------+
+    - or -
+    +------------------------------+ 
+    | SearchBooks: 1               |
+    |  +------------------------+  |
+    |  | Book: 0..*             |  |
+    |  | +------------------+   |  |
+    |  | | ShelfChanger: 1  |   |  |
+    |  | +------------------+   |  |
+    |  +------------------------+  |
+    +------------------------------+
+
+*/  
 class BooksApp extends React.Component {
 
   state = {
     books: [],
+    /*
+     * Used to configure the BookCase. Allows adding/removing
+     * arbitrary BookShelf components.
+     */
     config: {
       "libraryName":"My Reads2",
       "shelves":[
