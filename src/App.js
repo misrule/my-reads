@@ -9,8 +9,26 @@ import * as BooksApi from './BooksAPI'
 
 
 class BooksApp extends React.Component {
+
   state = {
-    books: []
+    books: [],
+    config: {
+      "libraryName":"My Reads2",
+      "shelves":[
+        {
+          "id":"currentlyReading",
+          "name":"Currently Reading"
+        },
+        {
+          "id":"wantToRead",
+          "name":"Want to Read"
+        },
+        {
+          "id":"read",
+          "name":"Read"
+        }
+      ]
+    }
   }
 
   componentDidMount() {
@@ -19,23 +37,32 @@ class BooksApp extends React.Component {
     })
   }
   
-
+  moveBook = (book, shelf) => {
+    BooksApi.update(book, shelf).then( _ => {
+      let updated = this.state.books.filter( b => b.id !== book.id )
+      updated.push(Object.assign(book, { shelf }))
+      this.setState({ books: updated })      
+    })
+  }
 
   render() {
 
-
+    const { books, config } = this.state
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-
           <BookCase 
-            libraryName="My Reads"
-            books={this.state.books} 
+            libraryConfig={config}
+            books={books}
+            onChangeShelf={this.moveBook}
           />
-            
-
         )}/>
-        <Route path="/search" component={SearchBooks}/>
+        <Route path="/search" render={() => (
+          <SearchBooks 
+            books={books} 
+            onChangeShelf={this.moveBook}
+          />
+        )}/>
       </div>
     )
   }
